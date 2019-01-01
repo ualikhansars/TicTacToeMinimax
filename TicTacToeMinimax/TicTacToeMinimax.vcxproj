@@ -154,6 +154,7 @@
     <ClCompile Include="src\fileStream\FileStream.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\shaders\FragmentShader.shader" />
     <None Include="res\shaders\VertexShader.shader" />
   </ItemGroup>
   <ItemGroup>

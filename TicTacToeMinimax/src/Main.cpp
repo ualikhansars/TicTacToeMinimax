@@ -58,8 +58,8 @@ int main(void)
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	std::string sourceString = FileStream::ReadFileIntoString("res/shaders/VertexShader.shader");
-	const char* vertexShaderSource = sourceString.c_str();
+	std::string vertexShaderSourceString = FileStream::ReadFileIntoString("res/shaders/VertexShader.shader");
+	const char* vertexShaderSource = vertexShaderSourceString.c_str();
 	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
 	glCompileShader(vertexShader);
 
@@ -72,6 +72,25 @@ int main(void)
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
+
+	/* Fragment shader */
+	unsigned int fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	std::string fragmentShaderSourceString = FileStream::ReadFileIntoString("res/shaders/FragmentShader.shader");
+	const char* fragmentShaderSource = fragmentShaderSourceString.c_str();
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
+	glCompileShader(fragmentShader);
+
+	int fragmentShaderSuccess;
+	char fragmentShaderInfoLog[512];
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentShaderSuccess);
+
+	if (!fragmentShaderSuccess)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, fragmentShaderInfoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << fragmentShaderInfoLog << std::endl;
+	}
+
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))

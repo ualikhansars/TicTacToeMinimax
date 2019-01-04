@@ -85,24 +85,16 @@ int main(void)
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	/*
 	float vertices[] = {
-		-0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f,
-		-0.75f, 0.0f, 0.0f, 0.75f, 0.0f, 0.0f,
-		-0.75f, -0.5f, 0.0f, 0.75f, -0.5f, 0.0f,
-		-0.75f, -1.0f, 0.0f, 0.75f, -1.0f, 0.0f,
+		-0.75f, 0.6f, 0.0f, 0.75f, 0.6f, 0.0f,
+		-0.75f, 0.1f, 0.0f, 0.75f, 0.1f, 0.0f,
+		-0.75f, -0.4f, 0.0f, 0.75f, -0.4f, 0.0f,
+		-0.75f, -0.9f, 0.0f, 0.75f, -0.9f, 0.0f,
 
-		-0.75f, 0.5f, 0.0f, -0.75f, -0.5f, 0.0f,
-		-0.25f, 0.5f, 0.0f, -0.25f, -0.5f, 0.0f,
-		0.25f, 0.5f, 0.0f, 0.25f, -0.5f, 0.0f,
-		0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f
-	};
-	*/
-
-	float vertices[] = {
-		0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		0.0f,  0.5f, 0.0f   // top 
+		-0.75f, 0.6f, 0.0f, -0.75f, -0.9f, 0.0f,
+		-0.25f, 0.6f, 0.0f, -0.25f, -0.9f, 0.0f,
+		 0.25f, 0.6f, 0.0f, 0.25f, -0.9f, 0.0f,
+		 0.75f, 0.6f, 0.0f, 0.75f, -0.9f, 0.0f
 	};
 
 	unsigned int VAO;
@@ -127,7 +119,7 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_LINES, 0, 16);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

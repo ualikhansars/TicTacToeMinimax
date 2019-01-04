@@ -35,25 +35,6 @@ int main(void)
 	if (glewInit() != GLEW_OK)
 		std::cout << "error while initializing glew" << std::endl;
 
-	float vertices[] = {
-		-0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f, 
-		-0.75f, 0.0f, 0.0f, 0.75f, 0.0f, 0.0f, 
-		-0.75f, -0.5f, 0.0f, 0.75f, -0.5f, 0.0f,
-		-0.75f, -1.0f, 0.0f, 0.75f, -1.0f, 0.0f,
-
-		-0.75f, 0.5f, 0.0f, -0.75f, -0.5f, 0.0f,
-		-0.25f, 0.5f, 0.0f, -0.25f, -0.5f, 0.0f,
-		0.25f, 0.5f, 0.0f, 0.25f, -0.5f, 0.0f,
-		0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f
-	};
-
-	/* Vertex Buffer Object */
-	unsigned int VBO;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
 	/* Vertex Shader */
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -81,22 +62,72 @@ int main(void)
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
 	glCompileShader(fragmentShader);
 
-	int fragmentShaderSuccess;
-	char fragmentShaderInfoLog[512];
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fragmentShaderSuccess);
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
-	if (!fragmentShaderSuccess)
+	if (!success)
 	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, fragmentShaderInfoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << fragmentShaderInfoLog << std::endl;
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
+	// link shaders
+	int shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+
+	// check for linking errors
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(shaderProgram, 512, nullptr, infoLog);
+	}
+
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	/*
+	float vertices[] = {
+		-0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f,
+		-0.75f, 0.0f, 0.0f, 0.75f, 0.0f, 0.0f,
+		-0.75f, -0.5f, 0.0f, 0.75f, -0.5f, 0.0f,
+		-0.75f, -1.0f, 0.0f, 0.75f, -1.0f, 0.0f,
+
+		-0.75f, 0.5f, 0.0f, -0.75f, -0.5f, 0.0f,
+		-0.25f, 0.5f, 0.0f, -0.25f, -0.5f, 0.0f,
+		0.25f, 0.5f, 0.0f, 0.25f, -0.5f, 0.0f,
+		0.75f, 0.5f, 0.0f, 0.75f, 0.5f, 0.0f
+	};
+	*/
+
+	float vertices[] = {
+		0.5f, -0.5f, 0.0f,  // bottom right
+		-0.5f, -0.5f, 0.0f,  // bottom left
+		0.0f,  0.5f, 0.0f   // top 
+	};
+
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	/* Vertex Buffer Object */
+	unsigned int VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(VAO);
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
